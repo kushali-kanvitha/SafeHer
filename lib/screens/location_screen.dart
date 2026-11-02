@@ -13,6 +13,7 @@ class LocationScreen extends StatefulWidget {
 class _LocationScreenState extends State<LocationScreen> {
   Position? currentPosition;
   bool isLoading = false;
+
   String message = 'Your current location has not been fetched yet.';
 
   Future<void> getLocation() async {
@@ -22,17 +23,15 @@ class _LocationScreenState extends State<LocationScreen> {
     });
 
     try {
+      // Check whether GPS is enabled
       bool serviceEnabled =
           await Geolocator.isLocationServiceEnabled();
 
       if (!serviceEnabled) {
-        setState(() {
-          message = 'Please enable location services.';
-          isLoading = false;
-        });
-        return;
+        throw Exception('Please enable Location/GPS on your phone.');
       }
 
+      // Check location permission
       LocationPermission permission =
           await Geolocator.checkPermission();
 
@@ -41,37 +40,48 @@ class _LocationScreenState extends State<LocationScreen> {
       }
 
       if (permission == LocationPermission.denied) {
-        setState(() {
-          message = 'Location permission was denied.';
-          isLoading = false;
-        });
-        return;
+        throw Exception('Location permission was denied.');
       }
 
       if (permission == LocationPermission.deniedForever) {
-        setState(() {
-          message = 'Location permission is permanently denied. Please enable it in settings.';
-          isLoading = false;
-        });
-        return;
+        throw Exception(
+          'Location permission is permanently denied. '
+          'Please enable it in App Settings.',
+        );
       }
 
+      // Fetch current location
       Position position = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,
+          timeLimit: Duration(seconds: 20),
         ),
       );
+
+      if (!mounted) return;
 
       setState(() {
         currentPosition = position;
         message = 'Location fetched successfully!';
-        isLoading = false;
+      });
+    } on Exception catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        message = e.toString().replaceFirst('Exception: ', '');
       });
     } catch (e) {
+      if (!mounted) return;
+
       setState(() {
-        message = 'Unable to get location. Please try again.';
-        isLoading = false;
+        message = 'Unable to get location: $e';
       });
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -85,9 +95,7 @@ class _LocationScreenState extends State<LocationScreen> {
         'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
 
     await SharePlus.instance.share(
-      ShareParams(
-        text: 'My current location:\n$mapLink',
-      ),
+      ShareParams(text: 'My current location:\n$mapLink'),
     );
   }
 
@@ -108,6 +116,7 @@ class _LocationScreenState extends State<LocationScreen> {
                 size: 90,
                 color: Colors.red,
               ),
+
               const SizedBox(height: 20),
 
               const Text(
@@ -128,12 +137,8 @@ class _LocationScreenState extends State<LocationScreen> {
               const SizedBox(height: 24),
 
               if (currentPosition != null) ...[
-                Text(
-                  'Latitude: ${currentPosition!.latitude}',
-                ),
-                Text(
-                  'Longitude: ${currentPosition!.longitude}',
-                ),
+                Text('Latitude: ${currentPosition!.latitude}'),
+                Text('Longitude: ${currentPosition!.longitude}'),
                 const SizedBox(height: 20),
               ],
 
@@ -143,7 +148,9 @@ class _LocationScreenState extends State<LocationScreen> {
                   onPressed: isLoading ? null : getLocation,
                   icon: const Icon(Icons.my_location),
                   label: Text(
-                    isLoading ? 'Getting Location...' : 'Get Current Location',
+                    isLoading
+                        ? 'Getting Location...'
+                        : 'Get Current Location',
                   ),
                 ),
               ),

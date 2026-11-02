@@ -86,7 +86,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
-// HOME SCREEN
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -95,23 +94,28 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(20, 22, 20, 28),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            // HEADER
+            Row(
               children: [
-                CircleAvatar(
-                  radius: 25,
-                  backgroundColor: Color(0xFFEDE4FF),
-                  child: Icon(
-                    Icons.shield,
-                    color: Color(0xFF8B5CF6),
-                    size: 30,
+                Container(
+                  height: 52,
+                  width: 52,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEDE4FF),
+                    borderRadius: BorderRadius.circular(17),
+                  ),
+                  child: const Icon(
+                    Icons.shield_rounded,
+                    color: Color(0xFF7C3AED),
+                    size: 31,
                   ),
                 ),
-                SizedBox(width: 12),
-                Column(
+                const SizedBox(width: 12),
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
@@ -123,216 +127,285 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Your safety, our priority',
-                      style: TextStyle(color: Colors.grey),
+                      'Your safety companion',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey,
+                      ),
                     ),
                   ],
                 ),
               ],
             ),
 
-            const SizedBox(height: 35),
+            const SizedBox(height: 30),
 
-            const Center(
-              child: Text(
-                'Are you feeling unsafe?',
-                style: TextStyle(
-                  fontSize: 21,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 25),
-            const SizedBox(height: 12),
-
-Row(
-  children: [
-    Expanded(
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const FakeCallScreen(),
-            ),
-          );
-        },
-        child: quickCard(
-          Icons.phone_in_talk,
-          'Fake Call',
-          const Color(0xFFE0F2F1),
-        ),
-      ),
-    ),
-  ],
-),
-
-            Center(
-              child: GestureDetector(
-                onTap: () {
-  showDialog(
-    context: context,
-    builder: (dialogContext) => AlertDialog(
-      title: const Text('Emergency SOS'),
-      content: const Text(
-        'Are you sure you want to activate SOS? '
-        'Your current location will be included in '
-        'the emergency message.',
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(dialogContext),
-          child: const Text('Cancel'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.pop(dialogContext);
-            sendSOS(context);
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
-          ),
-          child: const Text('Confirm SOS'),
-        ),
-      ],
-    ),
-  );
-},
-                child: Container(
-                  width: 175,
-                  height: 175,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE53935),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.red.withValues(alpha: 0.25),
-                        blurRadius: 25,
-                        spreadRadius: 8,
-                      ),
-                    ],
-                  ),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.sos,
-                        color: Colors.white,
-                        size: 65,
-                      ),
-                      Text(
-                        'SOS',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        'Tap for help',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 35),
-
+            // WELCOME MESSAGE
             const Text(
-              'Quick Access',
+              'Welcome!',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 27,
                 fontWeight: FontWeight.bold,
+                color: Color(0xFF30234A),
+              ),
+            ),
+            const SizedBox(height: 6),
+            const Text(
+              'Your safety tools are always within reach.',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
               ),
             ),
 
-            const SizedBox(height: 15),
+            const SizedBox(height: 28),
 
-            Row(
-              children: [
-                Expanded(
-  child: GestureDetector(
-    onTap: () async {
-      final Uri phoneUri = Uri(scheme: 'tel', path: '112');
-
-      if (await canLaunchUrl(phoneUri)) {
-        await launchUrl(phoneUri);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Unable to open the phone dialer.'),
-          ),
-        );
-      }
-    },
-    child: quickCard(
-      Icons.call,
-      'Emergency Call',
-      const Color(0xFFFFF3D6),
-    ),
-  ),
-),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: quickCard(
-                    Icons.location_on,
-                    'Share Location',
-                    const Color(0xFFFFE8E8),
-                  ),
-                ),
-              ],
+            // SOS SECTION
+            const Text(
+              'Need help?',
+              style: TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF30234A),
+              ),
             ),
 
-            const SizedBox(height: 12),
-
-            Row(
-              children: [
-                Expanded(
-                  child: quickCard(
-                    Icons.shield,
-                    'Safety Tips',
-                    const Color(0xFFE0F2F1),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: quickCard(
-                    Icons.call,
-                    'Emergency Call',
-                    const Color(0xFFFFF3D6),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 25),
+            const SizedBox(height: 13),
 
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(18),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFFEF4444),
+                    Color(0xFFDC2626),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.red.withValues(alpha: 0.20),
+                    blurRadius: 16,
+                    offset: const Offset(0, 7),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Expanded(
+                        child: Column(
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'EMERGENCY ASSISTANCE',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'SOS',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              'Prepare an emergency message '
+                              'with your current location.',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
+                                height: 1.4,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      const Icon(
+                        Icons.sos_rounded,
+                        color: Colors.white,
+                        size: 75,
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 18),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (dialogContext) => AlertDialog(
+                            title: const Text('Emergency SOS'),
+                            content: const Text(
+                              'Are you sure you want to activate SOS? '
+                              'Your current location will be included '
+                              'in the emergency message.',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(dialogContext);
+                                },
+                                child: const Text('Cancel'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(dialogContext);
+                                  sendSOS(context);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                  foregroundColor: Colors.white,
+                                ),
+                                child: const Text('Confirm SOS'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.warning_rounded),
+                      label: const Text(
+                        'Activate SOS',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.red,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 14,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(13),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+            // QUICK ACTIONS
+            const Text(
+              'Quick Actions',
+              style: TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF30234A),
+              ),
+            ),
+
+            const SizedBox(height: 14),
+
+            Row(
+              children: [
+                Expanded(
+                  child: _HomeActionCard(
+                    icon: Icons.phone_in_talk_rounded,
+                    title: 'Fake Call',
+                    subtitle: 'Simulate an incoming call',
+                    color: const Color(0xFFE0F2F1),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const FakeCallScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(width: 13),
+                Expanded(
+                  child: _HomeActionCard(
+                    icon: Icons.call_rounded,
+                    title: 'Emergency Call',
+                    subtitle: 'Call emergency number 112',
+                    color: const Color(0xFFFFF0D6),
+                    onTap: () async {
+                      final Uri phoneUri = Uri(
+                        scheme: 'tel',
+                        path: '112',
+                      );
+
+                      if (await canLaunchUrl(phoneUri)) {
+                        await launchUrl(phoneUri);
+                      } else if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Unable to open the phone dialer.',
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 25),
+
+            // SAFETY REMINDER
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(17),
               decoration: BoxDecoration(
                 color: const Color(0xFFEDE4FF),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(19),
               ),
               child: const Row(
                 children: [
                   Icon(
-                    Icons.favorite,
+                    Icons.favorite_rounded,
                     color: Color(0xFF8B5CF6),
-                    size: 30,
+                    size: 29,
                   ),
                   SizedBox(width: 12),
                   Expanded(
-                    child: Text(
-                      'Stay alert. Stay confident. Stay safe!',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'A little reminder',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: Color(0xFF6D28D9),
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          'Trust your instincts. Stay aware. '
+                          'Your safety matters!',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Color(0xFF51436C),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -343,33 +416,74 @@ Row(
       ),
     );
   }
+}
 
-  Widget quickCard(IconData icon, String title, Color color) {
-    return Container(
-      height: 115,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircleAvatar(
-            backgroundColor: color,
-            child: Icon(icon, color: const Color(0xFF6D28D9)),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
+// REUSABLE HOME ACTION CARD
+
+class _HomeActionCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _HomeActionCard({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(19),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(19),
+        child: Container(
+          height: 160,
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(19),
+            border: Border.all(
+              color: Colors.grey.shade200,
             ),
           ),
-        ],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                radius: 23,
+                backgroundColor: color,
+                child: Icon(
+                  icon,
+                  color: const Color(0xFF6D28D9),
+                  size: 24,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF30234A),
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                subtitle,
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
